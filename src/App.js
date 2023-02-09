@@ -1,17 +1,63 @@
-import './style.css'
+import { useReducer } from 'react';
+import DigitButton from './DigitButton';
+import './style.css';
+
+export const ACTIONS = {
+  ADD_DIGIT: 'add-digit',
+  CHOOSE_OPERATION: 'choose-operation',
+  CLEAR: 'clear',
+  DELETE_DIGIT: 'delete-digit',
+  EVALUATE: 'evaluate',
+  PERCENTAGE: 'percentage',
+  INVERT: 'invert',
+  SQUARE_ROOT: 'square-root',
+  SQUARED: 'squared'
+}
+
+function reducer(state, { type, payload }) {
+  switch (type) {
+    case ACTIONS.ADD_DIGIT:
+
+      if (payload.digit === '0' && state.currentOperand === '0') {
+        return state;
+      }
+
+      if (payload.digit === '.' && state.currentOperand.includes('.')) {
+        return state;
+      }
+
+      return {
+        ...state,
+        currentOperand: `${state.currentOperand || ''}${payload.digit}`
+      }
+
+  }
+}
+
+const INTEGER_FORMATTED = new Intl.NumberFormat('en-us', {maximumFractionDigits: 0});
+
+function formatOperand(operand) {
+  if (operand == null) return;
+  const [integer, decimal] = operand.split('.');
+  if (decimal == null) return INTEGER_FORMATTED.format(integer);
+  return `${INTEGER_FORMATTED.format(integer)}.${decimal}`;
+}
 
 function App() {
+
+  const [{ currentOperand, previousOperand, operaion }, dispatch] = useReducer(reducer, {});
+
   return (
     <div className="calculator-grid">
       <div className="output">
-        <div className="previous-operand">123 *</div>
-        <div className="current-operand">456</div>
+        <div className="previous-operand">{formatOperand(previousOperand)} {operaion}</div>
+        <div className="current-operand">{formatOperand(currentOperand)}</div>
       </div>
       <button className="span-two">AC</button>
       <button>DEL</button>
       <button>÷</button>
       <button>x²</button>
-      <button>7</button>
+      <DigitButton digit='7' dispatch={dispatch} />
       <button>8</button>
       <button>9</button>
       <button>*</button>

@@ -16,7 +16,7 @@ body {
     margin-top: 2rem;
     justify-content: center;
     grid-template-columns: repeat(5, 5.5rem);
-    grid-template-rows: minmax(7rem, auto) repeat(5, 5.5rem);
+    grid-template-rows: minmax(7.5rem, auto) repeat(5, 5.5rem);
     border: 3px solid black;
     border-radius: 10px;
     background-color: rgb(192, 192, 192);
@@ -73,7 +73,7 @@ body {
     .calculator-grid {
         margin-top: 1.8rem;
         grid-template-columns: repeat(5, 5rem);
-        grid-template-rows: minmax(6rem, auto) repeat(5, 5rem);
+        grid-template-rows: minmax(7rem, auto) repeat(5, 5rem);
         padding: 0.4rem;
         grid-gap: 0.18rem;
     }
@@ -95,7 +95,7 @@ body {
     .calculator-grid {
         margin-top: 1.5rem;
         grid-template-columns: repeat(5, 4.2rem);
-        grid-template-rows: minmax(5rem, auto) repeat(5, 4.2rem);
+        grid-template-rows: minmax(6rem, auto) repeat(5, 4.2rem);
         padding: 0.3rem;
         grid-gap: 0.15rem;
     }

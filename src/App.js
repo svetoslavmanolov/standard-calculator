@@ -82,7 +82,6 @@ function reducer(state, { type, payload }) {
           currentOperand: null
         }
       }
-
       return {
         ...state,
         currentOperand: state.currentOperand.slice(0, -1)
@@ -102,7 +101,43 @@ function reducer(state, { type, payload }) {
         currentOperand: evaluate(state)
       }
 
+    case ACTIONS.SQUARED:
+      if (state.currentOperand) {
+        return {
+          ...state,
+          currentOperand: (Math.pow(parseFloat(state.currentOperand), 2)).toString()
+        }
+      } else return state;
 
+    case ACTIONS.SQUARE_ROOT:
+      if (parseFloat(state.currentOperand) > 0) {
+        return {
+          ...state,
+          currentOperand: (Math.sqrt(parseFloat(state.currentOperand))).toString()
+        }
+      } else if (parseFloat(state.currentOperand) < 0) {
+        return {
+          ...state,
+          currentOperand: null,
+          operation: 'should be positive number'
+        }
+      } else return state;
+
+    case ACTIONS.PERCENTAGE:
+      if (state.currentOperand) {
+        return {
+          ...state,
+          currentOperand: (Math.pow(100, -1) * parseFloat(state.currentOperand)).toString()
+        }
+      } else return state;
+
+    case ACTIONS.INVERT:
+      if (state.currentOperand) {
+        return {
+          ...state,
+          currentOperand: (parseFloat(state.currentOperand) * -1).toString()
+        }
+      } else return state;
   }
 }
 
@@ -150,22 +185,22 @@ function App() {
       <button className="span-two" onClick={() => dispatch({ type: ACTIONS.CLEAR })} >AC</button>
       <button onClick={() => dispatch({ type: ACTIONS.DELETE_DIGIT })}>DEL</button>
       <OperationButton operation='÷' dispatch={dispatch} />
-      <button>x²</button>
+      <button onClick={() => dispatch({ type: ACTIONS.SQUARED })}>x²</button>
       <DigitButton digit='7' dispatch={dispatch} />
       <DigitButton digit='8' dispatch={dispatch} />
       <DigitButton digit='9' dispatch={dispatch} />
       <OperationButton operation='*' dispatch={dispatch} />
-      <button>+/-</button>
+      <button onClick={() => dispatch({ type: ACTIONS.INVERT })} >+/-</button>
       <DigitButton digit='4' dispatch={dispatch} />
       <DigitButton digit='5' dispatch={dispatch} />
       <DigitButton digit='6' dispatch={dispatch} />
       <OperationButton operation='+' dispatch={dispatch} />
-      <button>%</button>
+      <button onClick={() => dispatch({ type: ACTIONS.PERCENTAGE })}>%</button>
       <DigitButton digit='1' dispatch={dispatch} />
       <DigitButton digit='2' dispatch={dispatch} />
       <DigitButton digit='3' dispatch={dispatch} />
       <OperationButton operation='-' dispatch={dispatch} />
-      <button>√</button>
+      <button onClick={() => dispatch({ type: ACTIONS.SQUARE_ROOT })} >√</button>
       <DigitButton digit='0' dispatch={dispatch} />
       <DigitButton digit='.' dispatch={dispatch} />
       <DigitButton digit='00' dispatch={dispatch} />

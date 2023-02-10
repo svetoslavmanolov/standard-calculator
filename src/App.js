@@ -1,5 +1,6 @@
 import { useReducer } from 'react';
 import DigitButton from './DigitButton';
+import OperationButton from './OperationButton';
 import './style.css';
 
 export const ACTIONS = {
@@ -31,10 +32,61 @@ function reducer(state, { type, payload }) {
         currentOperand: `${state.currentOperand || ''}${payload.digit}`
       }
 
+    case ACTIONS.CHOOSE_OPERATION:
+      if (state.currentOperand == null && state.previousOperand == null) {
+        return state;
+      }
+      if (state.currentOperand == null) {
+        return {
+          ...state,
+          operation: payload.operation
+        }
+      }
+      if (state.previousOperand == null) {
+        return {
+          ...state,
+          operation: payload.operation,
+          previousOperand: state.currentOperand,
+          currentOperand: null
+        }
+      }
+      return {
+        ...state,
+        previousOperand: evaluate(state),
+        operation: payload.operation,
+        currentOperand: null
+      }
+
+    case ACTIONS.CLEAR:
+      return {};
+
+
   }
 }
 
-const INTEGER_FORMATTED = new Intl.NumberFormat('en-us', {maximumFractionDigits: 0});
+function evaluate({ currentOperand, previousOperand, operation }) {
+  const prev = parseFloat(previousOperand);
+  const current = parseFloat(currentOperand);
+  if (isNaN(prev) && isNaN(current)) return;
+  let computation = '';
+  switch (operation) {
+    case '+':
+      computation = prev + current;
+      break;
+    case '-':
+      computation = prev - current;
+      break;
+    case '*':
+      computation = prev * current;
+      break;
+    case '÷':
+      computation = prev / current;
+      break;
+  }
+  return computation.toString();
+}
+
+const INTEGER_FORMATTED = new Intl.NumberFormat('en-us', { maximumFractionDigits: 0 });
 
 function formatOperand(operand) {
   if (operand == null) return;
@@ -55,26 +107,26 @@ function App() {
       </div>
       <button className="span-two">AC</button>
       <button>DEL</button>
-      <button>÷</button>
+      <OperationButton operation='÷' dispatch={dispatch} />
       <button>x²</button>
       <DigitButton digit='7' dispatch={dispatch} />
-      <button>8</button>
-      <button>9</button>
-      <button>*</button>
+      <DigitButton digit='8' dispatch={dispatch} />
+      <DigitButton digit='9' dispatch={dispatch} />
+      <OperationButton operation='*' dispatch={dispatch} />
       <button>+/-</button>
-      <button>4</button>
-      <button>5</button>
-      <button>6</button>
-      <button>+</button>
+      <DigitButton digit='4' dispatch={dispatch} />
+      <DigitButton digit='5' dispatch={dispatch} />
+      <DigitButton digit='6' dispatch={dispatch} />
+      <OperationButton operation='+' dispatch={dispatch} />
       <button>%</button>
-      <button>1</button>
-      <button>2</button>
-      <button>3</button>
-      <button>-</button>
+      <DigitButton digit='1' dispatch={dispatch} />
+      <DigitButton digit='2' dispatch={dispatch} />
+      <DigitButton digit='3' dispatch={dispatch} />
+      <OperationButton operation='-' dispatch={dispatch} />
       <button>√</button>
-      <button>0</button>
-      <button>.</button>
-      <button>00</button>
+      <DigitButton digit='0' dispatch={dispatch} />
+      <DigitButton digit='.' dispatch={dispatch} />
+      <DigitButton digit='00' dispatch={dispatch} />
       <button className="span-two">=</button>
     </div>
   );
